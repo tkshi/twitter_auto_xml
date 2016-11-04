@@ -1,6 +1,10 @@
-web:
-  build: .
-  ports:
-   - "5000:5000"
-  volumes:
-   - .:/app
+version: '2'
+services:
+  selenium:
+    image: selenium/standalone-chrome:3.0.0-dubnium
+    ports:
+      - "4444:4444"
+  web:
+    build: .
+    ports:
+     - "5000:5000"

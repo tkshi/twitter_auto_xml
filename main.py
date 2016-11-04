@@ -1,38 +1,67 @@
 # -*- coding: utf-8 -*- 
 import sys
-sys.path.insert(0, '/Users/takashi/Projects/twitter_auto_login')
+sys.path.insert(0, '../twitter_auto_login')
 from Twitter import *
 from Gmail import *
 from Excel import *
-from GmailList import *
-result = getSheet(fileName="./uploads/gmail.xlsx",sheetName="Accounts")
+from main import run
+from Error import *
 
-gl = GmailList(gmailList=result)
-# print(gl[0].dumpArray())
-result = gl.dumpArray()
-# print(reuslt)
+twitterList = getSheet(fileName="./uploads/twitter.xls",sheetName="Accounts")
+googleList = getSheet(fileName="./uploads/gmail.xls",sheetName="Accounts")
 
-# for row in result:
-# 	# print(result[0])
-# 	if row[0] == u'GoogleID':
-# 		row.append(u'使用済み')
-# 		continue
-# 	gmail_phone_number = row[3]
-# 	gmail_pass = row[1]
-# 	gmail_adress = row[0]
-# 	gm = Gmail(gmail_adress=gmail_adress,gmail_pass=gmail_pass)
-	# tw = Twitter(twitter_id=twitter_id,twitter_pass=twitter_pass,twitter_email=twitter_email)
-	# print(tw.getLoginStatus())
-	# if tw.getLoginStatus() == True:
-	# 	row.append("success")
-	# else:
-	# 	row.append("error")
-	# tw.close()
+# def run(TWITTER_ID,TWITTER_PASS,TWITTER_EMAIL,
+# 	GMAIL_ADRESS,GMAIL_PASS,PHONE_NUMBER):
+# 	return True
 
-# import xlwt
- 
-# book = xlwt.Workbook()
-# book.add_sheet('NewSheet_1')
-# book.save('sample.xls')
+for grow in googleList:
+	gmail_id = grow[0]
+	gmail_pass =grow[1]
+	phone_number = grow[2]
+	status = grow[3] if len(grow) == 4 else ''
+	if status == 'used' or grow[0].find('@') == -1:
+		continue
+ 	try:
+		for trow in twitterList:
+			print(trow)
+			if len(trow) == 4 and trow[3] != '':
+				continue
+			twitter_id = trow[0]
+			twitter_pass = trow[1]
+			twitter_email = trow[2]
+			try:
+				run(TWITTER_ID=twitter_id,TWITTER_PASS=twitter_pass,TWITTER_EMAIL=twitter_email,
+	GMAIL_ADRESS=gmail_id,GMAIL_PASS=gmail_pass,PHONE_NUMBER=phone_number)
+				try:
+					trow[3] = phone_number
+				except IndexError:
+					trow.append(phone_number)
+			except (TwitterLoginError,AlreadyAddedPhoneNumber,CannotRegisterYetError) as e:
+				if(isinstance(e,TwitterLoginError)):
+					try:
+						trow[3] = 'error'
+					except (IndexError) as e:
+						trow.append('error')
+				elif(isinstance(e,AlreadyAddedPhoneNumber)):
+					try:
+						trow[3] = phone_number
+					except (IndexError) as e:
+						trow.append(phone_number)
+				elif(isinstance(e,CannotRegisterYetError)):
+					print('Can not register yet')
+					try:
+						trow[3] = ''
+					except (IndexError) as e:
+						trow.append('')
+			writeSheet(fileName="./uploads/twitter.xls",sheetName='Accounts',rows=twitterList)
+	except PhoneNumberInvalidError:
+		try:
+			grow[3] = 'used'
+		except IndexError:
+			grow.append('used')
+	writeSheet(fileName="./uploads/gmail.xls",sheetName='Accounts',rows=googleList)
 
-writeSheet(fileName="./uploads/gmail_out.xls",sheetName='Accounts',rows=result)
+
+
+# writeSheet(fileName="./uploads/gmail_out.xls",sheetName='Accounts',rows=gmailResult)
+# writeSheet(fileName="./uploads/twitter_out.xls",sheetName='Accounts',rows=twitterResult)

@@ -32,6 +32,5 @@ def writeSheet(fileName="sample.xlsx",sheetName="Accounts",rows=rows):
 
 	for row_i,row in enumerate(rows):
 		for i,cell in enumerate(row):
-			print(row_i,i,cell)
 			newSheet_1.write(row_i,i,cell)
 	book.save(fileName)
