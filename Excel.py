@@ -9,7 +9,7 @@ rows = [
 def getSheet(fileName="test.xlsx",sheetName="Accounts"):
 	import xlrd
 	 
-	book = xlrd.open_workbook('test.xlsx')
+	book = xlrd.open_workbook(fileName)
 	 
 
 	sheet = book.sheet_by_index(0)
