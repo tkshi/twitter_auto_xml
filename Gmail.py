@@ -4,6 +4,8 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from time import sleep
 import re
+import platform
+
 GMAIL_ADRESS = "frabro568@gmail.com"
 GMAIL_PASS = "ndagmabry9"
 
@@ -11,7 +13,11 @@ GMAIL_PASS = "ndagmabry9"
 class Gmail:
     def __init__(self,gmail_adress,gmail_pass):
         #page1
-        self.driver = webdriver.Chrome()
+        if  platform.system() == 'Windows':
+            CHROMEDRIVER_PATH = "./chromedriver.exe"
+        else:
+            CHROMEDRIVER_PATH = "./chromedriver"
+        self.driver = webdriver.Chrome(CHROMEDRIVER_PATH)
         self.driver.get("https://accounts.google.com/ServiceLogin?service=mail&continue=https://mail.google.com/mail/&hl=ja")
         elem = self.driver.find_element_by_css_selector('#Email')
         elem.send_keys(gmail_adress)

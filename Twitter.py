@@ -5,6 +5,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 from time import sleep
 from Error import *
+import platform
 
 TWITTER_ID = "rogovaevseviya1"
 TWITTER_PASS = "HxC7pICH1w"
@@ -20,7 +21,11 @@ class Twitter:
         self.twitter_id = twitter_id
         self.twitter_pass = twitter_pass
         self.twitter_email = twitter_email
-        self.driver = webdriver.Chrome()
+        if  platform.system() == 'Windows':
+            CHROMEDRIVER_PATH = "./chromedriver.exe"
+        else:
+            CHROMEDRIVER_PATH = "./chromedriver"
+        self.driver = webdriver.Chrome(CHROMEDRIVER_PATH)
         self.success_login = False
 
         self.driver.get("https://twitter.com/login")
@@ -95,7 +100,7 @@ class Twitter:
             elem = self.driver.find_element_by_css_selector('#cancel_registration')
             elem.click()
         except Exception:
-            pass 
+            pass
         elem = self.driver.find_element_by_css_selector('#page-container > div.content-main > div.content-inner.no-stream-end > h3')
         elem = self.driver.find_element_by_css_selector('#device_country_code > option:nth-child(8)')
         elem.click()

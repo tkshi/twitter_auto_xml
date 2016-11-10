@@ -14,8 +14,7 @@ googleList = getSheet(fileName="./uploads/gmail.xls",sheetName="Accounts")
 # 	GMAIL_ADRESS,GMAIL_PASS,PHONE_NUMBER):
 # 	return True
 
-def start():
-	APP_IP = '36.55.241.31'
+def start(APP_IP='36.55.241.31'):
 	for grow in googleList:
 		gmail_id = grow[0]
 		gmail_pass =grow[1]
