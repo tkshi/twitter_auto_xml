@@ -21,6 +21,12 @@ class CannotRegisterYetError(Exception):
 		pass
 	def __str__(self):
 		pass
+class OverTryCountError(Exception):
+	def __init__(self):
+		pass
+	def __str__(self):
+		pass
+
 
 if __name__ == '__main__':
 	raise TwitterLoginError()

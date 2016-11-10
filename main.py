@@ -14,7 +14,10 @@ googleList = getSheet(fileName="./uploads/gmail.xls",sheetName="Accounts")
 # 	GMAIL_ADRESS,GMAIL_PASS,PHONE_NUMBER):
 # 	return True
 
-def start(APP_IP='36.55.241.31'):
+def start(APP_IP='36.55.241.31',TWITTER_SHEET_PATH="./uploads/twitter.xls",GOOGLE_SHEET_PATH="./uploads/gmail.xls",TRY_COUNT=10):
+	print(APP_IP)
+	twitterList = getSheet(fileName=TWITTER_SHEET_PATH,sheetName="Accounts")
+	googleList = getSheet(fileName=GOOGLE_SHEET_PATH,sheetName="Accounts")
 	for grow in googleList:
 		gmail_id = grow[0]
 		gmail_pass =grow[1]
@@ -23,7 +26,10 @@ def start(APP_IP='36.55.241.31'):
 		if status == 'error' or grow[0].find('@') == -1:
 			continue
 	 	try:
-			for trow in twitterList:
+			for i,trow in enumerate(twitterList):
+				print('index:',i,TRY_COUNT)
+				if(i == TRY_COUNT):
+					raise OverTryCountError()
 				print(trow)
 				if len(trow) == 4 and trow[3] != '':
 					continue
@@ -54,17 +60,17 @@ def start(APP_IP='36.55.241.31'):
 							trow[3] = ''
 						except (IndexError) as e:
 							trow.append('')
-				writeSheet(fileName="./uploads/twitter.xls",sheetName='Accounts',rows=twitterList)
+				writeSheet(fileName=TWITTER_SHEET_PATH,sheetName='Accounts',rows=twitterList)
 		except PhoneNumberInvalidError:
 			try:
 				grow[3] = 'error'
 			except IndexError:
 				grow.append('error')
-		writeSheet(fileName="./uploads/gmail.xls",sheetName='Accounts',rows=googleList)
+		writeSheet(fileName=GOOGLE_SHEET_PATH,sheetName='Accounts',rows=googleList)
 
 
 if __name__ == '__main__':
-	start()
+	start(APP_IP='36.55.241.31',TWITTER_SHEET_PATH="./uploads/twitter.xls",GOOGLE_SHEET_PATH="./uploads/gmail.xls",TRY_COUNT=5)
 
 
 # writeSheet(fileName="./uploads/gmail_out.xls",sheetName='Accounts',rows=gmailResult)
