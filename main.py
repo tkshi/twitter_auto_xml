@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import sys
-sys.path.insert(0, '../twitter_auto_login')
+# sys.path.insert(0, '../twitter_auto_login')
 from Twitter import *
 from Gmail import *
 from Excel import *
-from main import run
+from Register import run
 from Error import *
 
 twitterList = getSheet(fileName="./uploads/twitter.xls",sheetName="Accounts")
